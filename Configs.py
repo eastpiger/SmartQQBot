@@ -3,13 +3,13 @@
 # Code by Yinzo:        https://github.com/Yinzo
 # Origin repository:    https://github.com/Yinzo/SmartQQBot
 
-import ConfigParser
+import configparser
 import os
 
 
 class Configs:
     def __init__(self):
-        self.conf = ConfigParser.ConfigParser()
+        self.conf = configparser.ConfigParser()
         self.config_path = "./config/QQBot_default.conf"
 
     def update(self):

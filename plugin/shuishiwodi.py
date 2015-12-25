@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-
+'''
 import logging
 import random
 import re
@@ -546,3 +546,4 @@ if __name__ == "__main__":
     threading.Event().set()
 
     # time.sleep(3)
+'''

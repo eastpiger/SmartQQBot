@@ -1,4 +1,5 @@
 # coding:utf-8
+'''
 import urllib2
 import json
 
@@ -38,3 +39,4 @@ if __name__ == "__main__":
     query = Weather()
     info = query.getWeatherOfCity(u'深圳')
     print(info)
+'''

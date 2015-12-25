@@ -1,4 +1,5 @@
 #coding:utf-8
+'''
 import urllib2
 import json
 
@@ -64,3 +65,4 @@ class Turing:
 # Usage:
 # tr=Turing()
 # print tr.getReply('北京到拉萨的火车')
+'''

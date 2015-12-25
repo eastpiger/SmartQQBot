@@ -8,8 +8,8 @@ import sys
 
 from MsgHandler import *
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+# reload(sys)
+# sys.setdefaultencoding("utf-8")
 
 if __name__ == '__main__':
     bot = QQ()
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     while 1:
         try:
             new_msg = bot.check_msg()
-        except socket.timeout, e:
+        except socket.timeout as e:
             logging.warning("check msg timeout, retrying...")
             continue
         if new_msg is not None:

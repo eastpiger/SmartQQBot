@@ -83,7 +83,7 @@ class Sess:
                 logging.warning("Receive a None when getting group sig")
                 raise ValueError("Receive a None when getting group sig")
             return group_sig
-        except BaseException, e:
+        except BaseException as e:
             logging.warning("Getting group sig met an error: " + str(e) + " Retrying...")
             return self.get_group_sig(fail_time + 1)
 

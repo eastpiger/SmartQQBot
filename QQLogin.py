@@ -9,7 +9,7 @@ import datetime
 import re
 import json
 import logging
-import thread
+import _thread
 from PIL import Image
 
 from Configs import *
@@ -24,7 +24,7 @@ def init_logging():
         format='%(asctime)s  %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
         datefmt='%a, %d %b %Y %H:%M:%S',
     )
-    
+
     handler = logging.StreamHandler()
     handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s  %(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
@@ -141,11 +141,11 @@ class QQ:
         ret = []
         while True:
             error_times += 1
-            print 'download QR code image...'
+            print('download QR code image...')
             self.req.Download('https://ssl.ptlogin2.qq.com/ptqrshow?appid={0}&e=0&l=L&s=8&d=72&v=4'.format(appid),
                               self.qrcode_path)
             logging.info("Please scan the downloaded QRCode")
-            thread.start_new_thread(display_QRCode, (self.qrcode_path,))
+            _thread.start_new_thread(display_QRCode, (self.qrcode_path,))
 
             while True:
                 html = self.req.Get(
@@ -268,10 +268,10 @@ class QQ:
             #     time.sleep(1)
             #     return
 
-            if ret_code in (103,):
-                logging.warning("received retcode: " + str(ret_code) + ": Check error.retrying.." + str(error_times))
-                time.sleep(1)
-                return self.check_msg(error_times + 1)
+            # if ret_code in (103,):
+            #     logging.warning("received retcode: " + str(ret_code) + ": Check error.retrying.." + str(error_times))
+            #     time.sleep(1)
+            #     return self.check_msg(error_times + 1)
 
             if ret_code in (121,):
                 logging.warning("received retcode: " + str(ret_code))
@@ -321,12 +321,12 @@ class QQ:
                 logging.warning("unknown retcode " + str(ret_code))
                 return
 
-        except ValueError, e:
+        except ValueError as e:
             logging.warning("Check error occured: " + str(e))
             time.sleep(1)
             return self.check_msg(error_times + 1)
 
-        except BaseException, e:
+        except BaseException as e:
             logging.warning("Unknown check error occured, retrying. Error: " + str(e))
             time.sleep(1)
             return self.check_msg(error_times + 1)
@@ -435,14 +435,13 @@ class QQ:
 
     # 发送群消息
     def send_qun_msg(self, guin, reply_content, msg_id, fail_times=0):
-        fix_content = str(reply_content.replace("\\", "\\\\\\\\").replace("\n", "\\\\n").replace("\t", "\\\\t")).decode(
-            "utf-8")
+        fix_content = str(reply_content.replace("\\", "\\\\\\\\").replace("\n", "\\\\n").replace("\t", "\\\\t"))
         rsp = ""
         try:
             req_url = "http://d1.web2.qq.com/channel/send_qun_msg2"
             data = (
                 ('r',
-                 '{{"group_uin":{0}, "face":564,"content":"[\\"{4}\\",[\\"font\\",{{\\"name\\":\\"Arial\\",\\"size\\":\\"10\\",\\"style\\":[0,0,0],\\"color\\":\\"000000\\"}}]]","clientid":"{1}","msg_id":{2},"psessionid":"{3}"}}'.format(
+                 '{{"group_uin":{0}, "face":564,"content":"[\\"{4}\\",[\\"font\\",{{\\"name\\":\\"Arial\\",\\"size\\":\\"10\\",\\"style\\":[0,0,0],\\"color\\":\\"000000\\"}}]]","clientid":{1},"msg_id":{2},"psessionid":"{3}"}}'.format(
                      guin, self.client_id, msg_id, self.psessionid, fix_content)),
                 ('clientid', self.client_id),
                 ('psessionid', self.psessionid)

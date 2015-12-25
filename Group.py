@@ -3,14 +3,15 @@
 # Code by Yinzo:        https://github.com/Yinzo
 # Origin repository:    https://github.com/Yinzo/SmartQQBot
 
-import cPickle
+import pickle
 from collections import namedtuple
 from QQLogin import *
 from Configs import *
 from Msg import *
-from plugin import shuishiwodi, shuishiwodiStartStatus
-from plugin.weather import Weather
-from plugin.Turing import Turing
+import random
+# from plugin import shuishiwodi, shuishiwodiStartStatus
+# from plugin.weather import Weather
+# from plugin.Turing import Turing
 
 logging.basicConfig(
     filename='smartqq.log',
@@ -27,7 +28,7 @@ class Group:
     def __init__(self, operator, ip):
         assert isinstance(operator, QQ), "Pm's operator is not a QQ"
         self.__operator = operator
-        if isinstance(ip, (int, long, str)):
+        if isinstance(ip, (int, str)):
             # 使用uin初始化
             self.guin = ip
             self.gid = ""
@@ -81,7 +82,7 @@ class Group:
                         logging.info("msg handle finished.")
                         self.msg_list.append(msg)
                         return func
-            except ConfigParser.NoOptionError as er:
+            except configparser.NoOptionError as er:
                 logging.warning(str(er) + "没有找到" + func + "功能的对应设置，请检查共有配置文件是否正确设置功能参数")
         self.msg_list.append(msg)
 
@@ -149,7 +150,7 @@ class Group:
         self.reply(result)
 
     def callout(self, msg):
-        if "智障机器人" in msg.content:
+        if "GeekPie机器人" in msg.content:
             logging.info(str(self.gid) + " calling me out, trying to reply....")
             self.reply("干嘛（‘·д·）")
             return True
@@ -197,7 +198,7 @@ class Group:
         try:
             tucao_file_path = str(self.global_config.conf.get('global', 'tucao_path')) + str(self.gid) + ".tucao"
             with open(tucao_file_path, "w+") as tucao_file:
-                cPickle.dump(self.tucao_dict, tucao_file)
+                pickle.dump(self.tucao_dict, tucao_file)
             logging.info("tucao saved. Now tucao list:  {0}".format(str(self.tucao_dict)))
         except Exception:
             logging.error("Fail to save tucao.")
@@ -212,9 +213,9 @@ class Group:
         if not os.path.exists(tucao_file_name):
             with open(tucao_file_name, "w") as tmp:
                 tmp.close()
-        with open(tucao_file_name, "r") as tucao_file:
+        with open(tucao_file_name, "rb") as tucao_file:
             try:
-                self.tucao_dict = cPickle.load(tucao_file)
+                self.tucao_dict = pickle.load(tucao_file)
                 logging.info("tucao loaded. Now tucao list:  {0}".format(str(self.tucao_dict)))
             except EOFError:
                 logging.info("tucao file is empty.")
@@ -246,14 +247,14 @@ class Group:
         return False
 
     def weather(self, msg):
-        match = re.match(ur'^(weather|天气) (\w+|[\u4e00-\u9fa5]+)', msg.content)
+        match = re.match(r'^(weather|天气) (\w+|[\u4e00-\u9fa5]+)', msg.content)
         if match:
             logging.info("查询天气...")
-            print msg.content
+            print(msg.content)
             command = match.group(1)
             city = match.group(2)
             logging.info(msg.content)
-            print city
+            print(city)
             if command == 'weather' or command == u'天气':
                 query = Weather()
                 info = query.getWeatherOfCity(city)
@@ -263,10 +264,10 @@ class Group:
         return False
 
     def ask(self, msg):
-        match = re.match(ur'^(ask|问) (\w+|[\u4e00-\u9fa5]+)', msg.content)
+        match = re.match(r'^(ask|问) (\w+|[\u4e00-\u9fa5]+)', msg.content)
         if match:
             # logging.info("问答测试...")
-            print msg.content
+            print(msg.content)
             command = match.group(1)
             info = match.group(2)
             # logging.info("info:")
@@ -282,7 +283,7 @@ class Group:
         return False
 
     def game(self, msg):
-        match = re.match(ur'^(?:!|！)(game)\s*(\w+|[\u4e00-\u9fa5]+)?', msg.content)
+        match = re.match(r'^(?:!|！)(game)\s*(\w+|[\u4e00-\u9fa5]+)?', msg.content)
         if match:
             command = str(match.group(1))
             args1 = match.group(2)
