@@ -15,7 +15,7 @@ class Pm:
     def __init__(self, operator, ip):
         assert isinstance(operator, QQ), "Pm's operator is not a QQ"
         self.__operator = operator
-        if isinstance(ip, (int, long, str)):
+        if isinstance(ip, (int, str)):
             # 使用uin初始化
             self.tuin = ip
         elif isinstance(ip, PmMsg):

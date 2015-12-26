@@ -168,9 +168,9 @@ class Group:
         match = re.match(r'^(?:!|！)(learn|delete)(?:\s?){(.+)}(?:\s?){(.+)}', msg.content)
         if match:
             logging.info("tucao command detected.")
-            command = str(match.group(1)).decode('utf8')
-            key = str(match.group(2)).decode('utf8')
-            value = str(match.group(3)).decode('utf8')
+            command = str(match.group(1))
+            key = str(match.group(2))
+            value = str(match.group(3))
             if command == 'learn':
                 if key in self.tucao_dict and value not in self.tucao_dict[key]:
                     self.tucao_dict[key].append(value)
@@ -197,7 +197,7 @@ class Group:
     def tucao_save(self):
         try:
             tucao_file_path = str(self.global_config.conf.get('global', 'tucao_path')) + str(self.gid) + ".tucao"
-            with open(tucao_file_path, "w+") as tucao_file:
+            with open(tucao_file_path, "wb+") as tucao_file:
                 pickle.dump(self.tucao_dict, tucao_file)
             logging.info("tucao saved. Now tucao list:  {0}".format(str(self.tucao_dict)))
         except Exception:
@@ -211,7 +211,7 @@ class Group:
         if not os.path.isdir(tucao_file_path):
             os.makedirs(tucao_file_path)
         if not os.path.exists(tucao_file_name):
-            with open(tucao_file_name, "w") as tmp:
+            with open(tucao_file_name, "wb") as tmp:
                 tmp.close()
         with open(tucao_file_name, "rb") as tucao_file:
             try:
