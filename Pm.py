@@ -9,6 +9,9 @@ from QQLogin import *
 from Configs import *
 from Msg import *
 from HttpClient import *
+from plugin.Turing import Turing
+
+import random
 
 
 class Pm:
@@ -31,6 +34,7 @@ class Pm:
             "command_1arg",
             "repeat",
             "callout",
+            "turing",
         ]
         logging.info(str(self.tid) + "私聊已激活, 当前执行顺序： " + str(self.process_order))
 
@@ -54,7 +58,7 @@ class Pm:
                         logging.info("msg handle finished.")
                         self.msg_list.append(msg)
                         return func
-            except ConfigParser.NoOptionError as er:
+            except configparser.NoOptionError as er:
                 logging.warning(er, "没有找到" + func + "功能的对应设置，请检查共有配置文件是否正确设置功能参数")
         self.msg_list.append(msg)
 
@@ -94,3 +98,9 @@ class Pm:
             logging.info("command format detected, command:{0}, arg1:{1}".format(command, arg1))
 
         return False
+
+    def turing(self, msg):
+        tr = Turing()
+        rep = tr.getReply(msg.content)
+        self.reply(rep)
+        return True

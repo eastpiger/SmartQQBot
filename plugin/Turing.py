@@ -1,38 +1,37 @@
 #coding:utf-8
-'''
-import urllib2
+import urllib.request, urllib.error
 import json
 
-from HTMLParser import HTMLParser
+# from HTMLParser import HTMLParser
 
-class MLStripper(HTMLParser):
-    def __init__(self):
-        self.reset()
-        self.fed = []
-    def handle_data(self, d):
-        self.fed.append(d)
-    def get_data(self):
-        return ''.join(self.fed)
+# class MLStripper(HTMLParser):
+#     def __init__(self):
+#         self.reset()
+#         self.fed = []
+#     def handle_data(self, d):
+#         self.fed.append(d)
+#     def get_data(self):
+#         return ''.join(self.fed)
 
-def strip_tags(html):
-    s = MLStripper()
-    s.feed(html)
-    return s.get_data()
+# def strip_tags(html):
+#     s = MLStripper()
+#     s.feed(html)
+#     return s.get_data()
 
 class Turing:
     def getReply(self,info):
         # try:
-            info=urllib2.quote(info.encode('utf-8'))
+            info=urllib.request.quote(info.encode('utf-8'))
             # print info
             urlStr="http://www.tuling123.com/openapi/api?key=2bd2aeb49107f6e7499b8a4dee9a6cab&info=%s" % info
-            response=urllib2.urlopen(urlStr)
-            dataHtml=response.read()
+            response=urllib.request.urlopen(urlStr)
+            dataHtml=response.read().decode('UTF-8')
             # print dataHtml
             data=json.loads(dataHtml)
             dir(data['code'])
             code=str(data['code'])
             if code =='100000':
-                return strip_tags(data['text'])
+                return data['text']
 
             elif code =='200000':
                 return u'你需要的信息在：'+data['url']
@@ -65,4 +64,3 @@ class Turing:
 # Usage:
 # tr=Turing()
 # print tr.getReply('北京到拉萨的火车')
-'''
