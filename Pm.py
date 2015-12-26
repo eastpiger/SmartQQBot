@@ -67,7 +67,7 @@ class Pm:
         return self.__operator.send_buddy_msg(self.tuin, reply_content, self.msg_id)
 
     def callout(self, msg):
-        if "智障机器人" in msg.content:
+        if "GeekPie机器人" in msg.content:
             logging.info(str(self.tid) + " calling me out, trying to reply....")
             self.reply("干嘛（‘·д·）")
             return True

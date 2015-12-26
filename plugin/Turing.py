@@ -23,7 +23,7 @@ class Turing:
         # try:
             info=urllib.request.quote(info.encode('utf-8'))
             # print info
-            urlStr="http://www.tuling123.com/openapi/api?key=2bd2aeb49107f6e7499b8a4dee9a6cab&info=%s" % info
+            urlStr="http://www.tuling123.com/openapi/api?key=d121ec7d3e0e33da1b4015a864685768&info=%s" % info
             response=urllib.request.urlopen(urlStr)
             dataHtml=response.read().decode('UTF-8')
             # print dataHtml

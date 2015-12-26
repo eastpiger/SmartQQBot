@@ -9,6 +9,10 @@ from QQLogin import *
 from Configs import *
 from Msg import *
 from HttpClient import *
+from plugin.Turing import Turing
+
+import random
+
 
 
 class Sess:
@@ -31,6 +35,7 @@ class Sess:
         self.update_config()
         self.process_order = [
             "callout",
+            "turing",
         ]
         logging.info(str(self.tid) + "临时聊天已激活, 当前执行顺序： " + str(self.process_order))
 
@@ -54,7 +59,7 @@ class Sess:
                         logging.info("msg handle finished.")
                         self.msg_list.append(msg)
                         return func
-            except ConfigParser.NoOptionError as er:
+            except configparser.NoOptionError as er:
                 logging.warning(er, "没有找到" + func + "功能的对应设置，请检查共有配置文件是否正确设置功能参数")
         self.msg_list.append(msg)
 
@@ -92,8 +97,15 @@ class Sess:
         return self.__operator.send_sess_msg2(self.tuin, reply_content, self.msg_id, self.group_sig, self.service_type)
 
     def callout(self, msg):
-        if "智障机器人" in msg.content:
+        if "GeekPie机器人" in msg.content:
             logging.info(str(self.tid) + " calling me out, trying to reply....")
             self.reply("干嘛（‘·д·）")
             return True
         return False
+
+    def turing(self, msg):
+        tr = Turing()
+        rep = tr.getReply(msg.content)
+        self.reply(rep)
+        return True
+

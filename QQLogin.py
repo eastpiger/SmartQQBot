@@ -278,7 +278,7 @@ class QQ:
                 return self.check_msg(5)
 
             elif ret_code == 0:
-                if len(ret['result']) == 0:
+                if 'result' not in ret or len(ret['result']) == 0:
                     logging.info("received retcode: " + str(ret_code) + ": No message.")
                     time.sleep(1)
                     return
@@ -466,8 +466,7 @@ class QQ:
 
     # 发送私密消息
     def send_buddy_msg(self, tuin, reply_content, msg_id, fail_times=0):
-        fix_content = str(reply_content.replace("\\", "\\\\\\\\").replace("\n", "\\\\n").replace("\t", "\\\\t")).decode(
-            "utf-8")
+        fix_content = str(reply_content.replace("\\", "\\\\\\\\").replace("\n", "\\\\n").replace("\t", "\\\\t"))
         rsp = ""
         try:
             req_url = "http://d1.web2.qq.com/channel/send_buddy_msg2"
@@ -480,7 +479,7 @@ class QQ:
             )
             rsp = self.req.Post(req_url, data, self.default_config.conf.get("global", "connect_referer"))
             rsp_json = json.loads(rsp)
-            if rsp_json['retcode'] != 0:
+            if 'retcode' in rsp_json and rsp_json['retcode'] != 0:
                 raise ValueError("reply pmchat error" + str(rsp_json['retcode']))
             logging.info("Reply successfully.")
             logging.debug("Reply response: " + str(rsp))
@@ -497,8 +496,7 @@ class QQ:
 
     # 发送临时消息
     def send_sess_msg2(self, tuin, reply_content, msg_id, group_sig, service_type=0, fail_times=0):
-        fix_content = str(reply_content.replace("\\", "\\\\\\\\").replace("\n", "\\\\n").replace("\t", "\\\\t")).decode(
-            "utf-8")
+        fix_content = str(reply_content.replace("\\", "\\\\\\\\").replace("\n", "\\\\n").replace("\t", "\\\\t"))
         rsp = ""
         try:
             req_url = "http://d1.web2.qq.com/channel/send_sess_msg2"
@@ -520,7 +518,7 @@ class QQ:
             )
             rsp = self.req.Post(req_url, data, self.default_config.conf.get("global", "connect_referer"))
             rsp_json = json.loads(rsp)
-            if rsp_json['retcode'] != 0:
+            if 'retcode' in rsp_json and rsp_json['retcode'] != 0:
                 raise ValueError("reply sess chat error" + str(rsp_json['retcode']))
             logging.info("Reply successfully.")
             logging.debug("Reply response: " + str(rsp))
@@ -538,8 +536,7 @@ class QQ:
     # 主动发送临时消息
     def send_sess_msg2_fromGroup(self, guin, tuin, reply_content, msg_id, service_type=0, fail_times=0):
         group_sig = self.__getGroupSig(guin, tuin, service_type)
-        fix_content = str(reply_content.replace("\\", "\\\\\\\\").replace("\n", "\\\\n").replace("\t", "\\\\t")).decode(
-            "utf-8")
+        fix_content = str(reply_content.replace("\\", "\\\\\\\\").replace("\n", "\\\\n").replace("\t", "\\\\t"))
         rsp = ""
         try:
             req_url = "http://d1.web2.qq.com/channel/send_sess_msg2"
@@ -561,7 +558,7 @@ class QQ:
             )
             rsp = self.req.Post(req_url, data, self.default_config.conf.get("global", "connect_referer"))
             rsp_json = json.loads(rsp)
-            if rsp_json['retcode'] != 0:
+            if 'retcode' in rsp_json and rsp_json['retcode'] != 0:
                 raise ValueError("reply sess chat error" + str(rsp_json['retcode']))
             logging.info("send_sess_msg2_fromGroup: Reply successfully.")
             logging.debug("send_sess_msg2_fromGroup: Reply response: " + str(rsp))

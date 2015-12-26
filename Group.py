@@ -8,6 +8,8 @@ from collections import namedtuple
 from QQLogin import *
 from Configs import *
 from Msg import *
+from plugin.Turing import Turing
+
 import random
 # from plugin import shuishiwodi, shuishiwodiStartStatus
 # from plugin.weather import Weather
@@ -54,6 +56,7 @@ class Group:
             "command_0arg",
             "command_1arg",
             "tucao",
+            "turing",
         ]
         self.__game_handler = None
         logging.info(str(self.gid) + "群已激活, 当前执行顺序： " + str(self.process_order))
@@ -310,3 +313,9 @@ class Group:
                 self.__game_handler.run(msg)
                 return True  # 游戏期间屏蔽其他处理过程
         return False
+
+    def turing(self, msg):
+        tr = Turing()
+        rep = tr.getReply(msg.content)
+        self.reply(rep)
+        return True
