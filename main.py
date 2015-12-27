@@ -13,7 +13,7 @@ from MsgHandler import *
 
 if __name__ == '__main__':
     bot = QQ()
-    bot.login_by_qrcode()
+    bot.login()
     bot_handler = MsgHandler(bot)
     while 1:
         try:
