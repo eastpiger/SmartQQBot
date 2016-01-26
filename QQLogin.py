@@ -3,7 +3,7 @@
 # Code by Yinzo:        https://github.com/Yinzo
 # Origin repository:    https://github.com/Yinzo/SmartQQBot
 
-
+import os
 import time
 import datetime
 import re
@@ -108,6 +108,24 @@ class QQ:
             V += N[U[T] & 15]
         return V
 
+            #     x += "";
+            #     for (var N = [], T = 0; T < I.length; T++) N[T % 4] ^= I.charCodeAt(T);
+            #     var U = ["EC", "OK"],
+            #         V = [];
+            #     V[0] = x >> 24 & 255 ^ U[0].charCodeAt(0);
+            #     V[1] = x >> 16 & 255 ^ U[0].charCodeAt(1);
+            #     V[2] = x >> 8 & 255 ^ U[1].charCodeAt(0);
+            #     V[3] = x & 255 ^ U[1].charCodeAt(1);
+            #     U = [];
+            #     for (T = 0; T < 8; T++) U[T] = T % 2 == 0 ? N[T >> 1] : V[T >> 1];
+            #     N = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
+            #     V = "";
+            #     for (T = 0; T < U.length; T++) {
+            #         V += N[U[T] >> 4 & 15];
+            #         V += N[U[T] & 15]
+            #     }
+            #     return V
+            # },
     def __getGroupSig(self, guin, tuin, service_type=0):
         key = '%s --> %s' % (guin, tuin)
         if key not in self.__groupSig_list:
@@ -123,82 +141,6 @@ class QQ:
             return self.__groupSig_list[key]
         return ""
 
-# <<<<<<< HEAD
-#     def login_by_qrcode(self):
-#         logging.info("Requesting the login pages...")
-#         initurl_html = self.req.Get(self.default_config.conf.get("global", "smartqq_url"))
-#         logging.debug("login page html: " + str(initurl_html))
-#         initurl = get_revalue(initurl_html, r'\.src = "(.+?)"', "Get Login Url Error.", 1)
-#         html = self.req.Get(initurl + '0')
-
-#         appid = get_revalue(html, r'<input type="hidden" name="aid" value="(\d+)" />', 'Get AppId Error', 1)
-#         sign = get_revalue(html, r'g_login_sig=encodeURIComponent\("(.*?)"\)', 'Get Login Sign Error', 0)
-#         js_ver = get_revalue(html, r'g_pt_version=encodeURIComponent\("(\d+)"\)', 'Get g_pt_version Error', 1)
-#         mibao_css = get_revalue(html, r'g_mibao_css=encodeURIComponent\("(.+?)"\)', 'Get g_mibao_css Error', 1)
-
-#         star_time = date_to_millis(datetime.datetime.utcnow())
-
-#         error_times = 0
-#         ret = []
-#         while True:
-#             error_times += 1
-#             print('download QR code image...')
-#             self.req.Download('https://ssl.ptlogin2.qq.com/ptqrshow?appid={0}&e=0&l=L&s=8&d=72&v=4'.format(appid),
-#                               self.qrcode_path)
-#             logging.info("Please scan the downloaded QRCode")
-#             _thread.start_new_thread(display_QRCode, (self.qrcode_path,))
-
-#             while True:
-#                 html = self.req.Get(
-#                     'https://ssl.ptlogin2.qq.com/ptqrlogin?webqq_type=10&remember_uin=1&login2qq=1&aid={0}&u1=http%3A%2F%2Fw.qq.com%2Fproxy.html%3Flogin2qq%3D1%26webqq_type%3D10&ptredirect=0&ptlang=2052&daid=164&from_ui=1&pttype=1&dumy=&fp=loginerroralert&action=0-0-{1}&mibao_css={2}&t=undefined&g=1&js_type=0&js_ver={3}&login_sig={4}'.format(
-#                         appid, date_to_millis(datetime.datetime.utcnow()) - star_time, mibao_css, js_ver, sign),
-#                     initurl)
-#                 logging.debug("QRCode check html:   " + str(html))
-#                 ret = html.split("'")
-#                 if ret[1] in ('0', '65'):  # 65: QRCode 失效, 0: 验证成功, 66: 未失效, 67: 验证中
-#                     break
-#             if ret[1] == '0' or error_times > 10:
-#                 break
-
-#         if ret[1] != '0':
-#             return
-#         logging.info("QRCode scaned, now logging in.")
-
-#         # 删除QRCode文件
-#         if os.path.exists(self.qrcode_path):
-#             os.remove(self.qrcode_path)
-
-#         # 记录登陆账号的昵称
-#         self.username = ret[11]
-
-#         html = self.req.Get(ret[5])
-#         logging.debug("mibao_res html:  " + str(html))
-
-
-#         # url = get_revalue(html, r' src="(.+?)"', 'Get mibao_res Url Error.', 0)
-#         # if url != '':
-#         #     html = self.req.Get(url.replace('&amp;', '&'))
-#         #     url = get_revalue(html, r'location\.href="(.+?)"', 'Get Redirect Url Error', 1)
-#         #     self.req.Get(url)
-
-
-#         self.ptwebqq = self.req.getCookie('ptwebqq')
-
-#         # 测试用请求
-#         self.req.Get("http://w.qq.com/proxy.html?login2qq=1&webqq_type=10")
-#         self.req.Get("http://web2.qq.com/web2_cookie_proxy.html")
-#         self.req.Get("http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1")
-#         self.req.Get("http://s.web2.qq.com/api/getvfwebqq?ptwebqq={0}&clientid={1}&psessionid={2}&t={3}".format(
-#             self.ptwebqq,
-#             self.client_id,
-#             self.psessionid,
-#             date_to_millis(datetime.datetime.utcnow()) - star_time
-#         ))
-#         self.req.Get("http://d1.web2.qq.com/proxy.html?v=20151105001&callback=1&id=2")
-
-
-
-# =======
     def __login(self, times = 10):
         login_error = 1
         while login_error > 0:
@@ -208,9 +150,7 @@ class QQ:
                 self.ptwebqq = self.req.getCookie('ptwebqq')
 
                 html = self.req.Post('http://d1.web2.qq.com/channel/login2', {
-                    'r': '{{"ptwebqq":"{0}","clientid":{1},"psessionid":"{2}","status":"online"}}'.format(self.ptwebqq,
-                                                                                                          self.client_id,
-                                                                                                          self.psessionid)
+                    'r': '{{"ptwebqq":"{0}","clientid":{1},"psessionid":"{2}","status":"online"}}'.format(self.ptwebqq,self.client_id,self.psessionid)
                 }, self.default_config.conf.get("global", "connect_referer"))
                 logging.debug("login html:  " + str(html))
                 ret = json.loads(html)
@@ -301,6 +241,7 @@ class QQ:
                 if self.__login(): break
         ret = self.get_self_info2()
         self.username = ret['nick']
+        self.uin = ret['uin']
 
 
         logging.info("QQ：{0} login successfully, Username：{1}".format(self.account, self.username))
@@ -350,6 +291,7 @@ class QQ:
                 group_list = []
                 notify_list = []
                 for msg in ret['result']:
+                    print(msg)
                     ret_type = msg['poll_type']
                     if ret_type == 'message':
                         pm_list.append(PmMsg(msg))
@@ -465,6 +407,30 @@ class QQ:
             logging.exception("get_friend_info2")
             return None
 
+    # 获取头像
+    def getface(self, tuin):
+        uin_str = str(tuin)
+        path = "/Users/eastpiger/Web/iWall/pic/{0}.jpg".format(uin_str)
+
+        if os.path.exists(path):
+            return
+
+        # 不使用webqq，使用网上提供的下载地址和方法
+        if uin_str not in self.friend_list:
+            account = self.uin_to_account(tuin)
+            info = self.get_friend_info2(tuin) or {'nick':'群用户'}
+
+            self.friend_list[uin_str] = dict(info, **account)
+        qqnum = self.friend_list[uin_str]['account']
+        url = "http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin={0}&src_uin=www.feifeiboke.com&fid=blog&spec=100".format(
+                qqnum
+            )
+        # url = "http://face7.web.qq.com/cgi/svr/face/getface?cache=1&type=1&f=40&uin={0}&t={1}&vfwebqq={2}".format(
+        #         self.uin, self.req.getTimeStamp(), self.vfwebqq
+        #     )
+        print(url)
+        response = self.req.GetDownload(url, "http://w.qq.com/", path)
+
     # 获取好友详情信息
     def get_friend_info(self, tuin):
         uin_str = str(tuin)
@@ -507,17 +473,49 @@ class QQ:
         """
         if gcode == 0:
             return {}
-        try:
-            url = "http://s.web2.qq.com/api/get_group_info_ext2?gcode=%s&vfwebqq=%s&t=%s" % (
-                gcode, self.vfwebqq, int(time.time() * 100))
-            response = self.req.Get(url)
-            rsp_json = json.loads(response)
-            if rsp_json["retcode"] != 0:
-                return {}
-            return rsp_json["result"]
-        except Exception as ex:
-            logging.warning("get_group_info_ext2. Error: " + str(ex))
+        # try:
+        url = "http://s.web2.qq.com/api/get_group_info_ext2?gcode=%s&vfwebqq=%s&t=%s" % (
+            gcode, self.vfwebqq, int(time.time() * 100))
+        response = self.req.Get(url)
+        rsp_json = json.loads(response)
+        # print(url)
+        # print(response)
+        if rsp_json["retcode"] != 0:
             return {}
+        return rsp_json["result"]
+        # except Exception as ex:
+        #     logging.warning("get_group_info_ext2. Error: " + str(ex))
+        #     return {}
+
+    # 获取群列表
+    def get_group_name_list_mask2(self):
+        # try:
+            req_url = "http://s.web2.qq.com/api/get_group_name_list_mask2"
+            data = (
+                ('r',
+                 '{{"vfwebqq":"{0}", "hash":"{1}"}}'.format(
+                     self.vfwebqq, self.__hash_digest(self.uin, self.ptwebqq))),
+            )
+            rsp = self.req.Post(req_url, data, self.default_config.conf.get("global", "connect_referer"))
+            print(rsp)
+            rsp_json = json.loads(rsp)
+            if 'retcode' in rsp_json and rsp_json['retcode'] != 0:
+                raise ValueError("reply group chat error" + str(rsp_json['retcode']))
+            logging.info("send_qun_msg: Reply successfully.")
+            logging.debug("send_qun_msg: Reply response: " + str(rsp))
+            self.group_name_list_mask = rsp_json['result']
+            self.group_name_list_mask2 = {i['gid']:i['code'] for i in rsp_json['result']['gnamelist']}
+            # return rsp_json
+        # except:
+        #     logging.exception("send_qun_msg exception")
+        #     if fail_times < 5:
+        #         logging.warning("send_qun_msg: Response Error.Wait for 2s and Retrying." + str(fail_times))
+        #         logging.debug(rsp)
+        #         time.sleep(2)
+        #         self.send_qun_msg(guin, reply_content, msg_id, fail_times + 1)
+        #     else:
+        #         logging.warning("send_qun_msg: Response Error over 5 times.Exit.reply content:" + str(reply_content))
+        #         return False
 
     # 发送群消息
     def send_qun_msg(self, guin, reply_content, msg_id, fail_times=0):

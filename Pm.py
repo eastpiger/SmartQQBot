@@ -104,4 +104,5 @@ class Pm:
         tr = Turing()
         rep = tr.getReply(msg.content)
         self.reply(rep)
+        print(rep)
         return True

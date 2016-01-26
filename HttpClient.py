@@ -39,6 +39,30 @@ class HttpClient:
         except urllib.error.HTTPError as e:
             return e.read()
 
+    def GetDownload(self, url, refer=None, path=""):
+        try:
+            # print("requesting " + str(url) + " with cookies:")
+            # print(self.__cookie)
+            req = urllib.request.Request(url)
+            if not (refer is None):
+                req.add_header('Referer', refer)
+            # req.add_header('Referer', 'http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1')
+            # print(req.headers)
+            tmp_req = urllib.request.urlopen(req)
+            print("start download")
+            pic = tmp_req.read()
+            try:
+                File = open(path, 'wb')
+                File.write(pic)
+                File.close()
+            except:
+                print("download failed")
+                return
+            self.__cookie.save('cookie/cookie.data',ignore_discard=True,ignore_expires=True)
+            return tmp_req.read().decode('UTF-8')
+        except urllib.error.HTTPError as e:
+            return e.read()
+
     def Post(self, url, data, refer=None):
         try:
             # print("requesting " + str(url) + " with data:")

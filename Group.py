@@ -57,10 +57,12 @@ class Group:
             "command_1arg",
             "tucao",
             "turing",
+            "iWall",
         ]
         self.__game_handler = None
         logging.info(str(self.gid) + "群已激活, 当前执行顺序： " + str(self.process_order))
         self.tucao_load()
+        self.userlist = {}
 
     def update_config(self):
         self.private_config.update()
@@ -318,4 +320,60 @@ class Group:
         tr = Turing()
         rep = tr.getReply(msg.content)
         self.reply(rep)
+        return True
+
+    def update_userlist(self, qun_uin):
+        t = self.__operator.get_group_info_ext2(qun_uin)
+        try:
+            a = {i['uin']:i['nick'] for i in t['minfo']}
+        except:
+            a = {}
+        try:
+            b = {i['muin']:i['card'] for i in t['cards']}
+        except:
+            b = {}
+        a.update(b)
+        self.userlist[qun_uin] = a
+
+    def get_card(self, qun_uin, peo_uin):
+        # try:
+            if not qun_uin in self.userlist:
+                self.update_userlist(qun_uin)
+            if not peo_uin in self.userlist[qun_uin]:
+                self.update_userlist(qun_uin)
+            return self.userlist[qun_uin][peo_uin]
+        # except:
+        #     return None
+
+    def iWall(self, msg):
+        try:
+            print(msg.group_code)
+            qun_uin_groupcode = msg.group_code
+
+            try:
+                qun_uin = self.__operator.group_name_list_mask2[qun_uin_groupcode]
+            except:
+                self.__operator.get_group_name_list_mask2()
+                qun_uin = self.__operator.group_name_list_mask2[qun_uin_groupcode]
+
+            peo_uin = msg.send_uin
+            username = self.get_card(qun_uin, peo_uin)
+            # from HttpClient import HttpClient
+            # req = HttpClient()
+            self.__operator.getface(peo_uin)
+        except:
+            username = "none"
+            # peo_uin = ""
+        if username in ("张宝华","王铁崖","王铁涯","浦志强"): username = "这个人因为违反基本法被机器人BAN了"
+        print(1)
+        html = self.__operator.req.Post('http://127.0.0.1:8000/api/qq/sendmsg/', {
+                    'name': username,
+                    'content': msg.content,
+                    'uin': peo_uin,
+                })
+        print(html)
+        print(2)
+        ret = json.loads(html)
+        print(3)
+
         return True
