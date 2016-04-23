@@ -74,6 +74,7 @@ class QQBot(object):
         self.friend_list = {}
         self._group_sig_list = {}
         self._self_info = {}
+        self._group_list = []
 
         self.client_id = 53999199
         self.ptwebqq = ''
@@ -354,6 +355,25 @@ class QQBot(object):
             logging.warning("Pooling returns unknown retcode %s" % ret_code)
         return None
 
+    def gid_to_name(self, gid):
+        """
+        将uin转换成用户QQ号
+        :param tuin:
+        :return:str 用户QQ号
+        """
+
+        while not self._self_info:
+            self.get_self_info2()
+
+        while not self._group_list:
+            self._group_list = self.get_group_name_list_mask2()
+
+        for i in self._group_list['gnamelist']:
+            if gid == i['gid']:
+                return i['name']
+
+        return ''
+
     def uin_to_account(self, tuin):
         """
         将uin转换成用户QQ号
@@ -399,6 +419,37 @@ class QQBot(object):
                 return {}
             self._self_info = rsp_json["result"]
         return self._self_info
+
+    # 获取群列表
+    def get_group_name_list_mask2(self):
+        """
+        获取群列表
+        get_group_name_list_mask2
+        :return:list
+        """
+        # try:
+        logging.info("RUNTIMELOG Requesting the online buddies.")
+
+        response = json.loads(self.client.post(
+            'http://s.web2.qq.com/api/get_group_name_list_mask2',
+            {
+                'r': json.dumps(
+                    {
+                        "vfwebqq": self.vfwebqq,
+                        "hash": self._hash_digest(self._self_info['uin'], self.ptwebqq),
+                    }
+                )
+            },
+        ))
+        logging.debug("RESPONSE get_group_name_list_mask2 html:    " + str(response))
+        if response['retcode'] != 0:
+            raise TypeError('get_online_buddies2 result error')
+        response = response['result']
+        return response
+
+        # except:
+        #     logging.warning("RUNTIMELOG get_online_buddies2 fail")
+        #     return None
 
     # 获取在线好友列表
     def get_online_buddies2(self):
