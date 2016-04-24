@@ -29,8 +29,8 @@ def filter_tags(htmlstr):
     s=re_h.sub('',s) #去掉HTML 标签
     s=re_comment.sub('',s)#去掉HTML注释
     #去掉多余的空行
-    blank_line=re.compile('\n+')
-    s=blank_line.sub('\n',s)
+    # blank_line=re.compile('\n+')
+    # s=blank_line.sub('\n',s)
     s=replaceCharEntity(s)#替换实体
     return s
 
