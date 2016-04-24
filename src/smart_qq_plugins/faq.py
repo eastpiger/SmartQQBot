@@ -59,6 +59,24 @@ def replaceCharEntity(htmlstr):
             sz=re_charEntity.search(htmlstr)
     return htmlstr
 
+def maimeng():
+    maimeng_list = [
+        '(●´∀｀●)',
+        '⁽⁽٩( ´͈ ᗨ `͈ )۶⁾⁾',
+        'ヽ(≧∀≦)ﾉ',
+        '(´｡✪ω✪｡｀)',
+        '(⑉• •⑉)‥♡',
+        '٩(๑^o^๑)۶',
+        '(=^ェ^=)',
+        '✧٩(ˊωˋ*)و✧',
+        '(๑•́ ₃ •̀๑)',
+        '(๑＞ڡ＜)☆ ',
+        '(≧▽≦)',
+        '(๑´•.̫ • `๑)',
+        'ﾍ(ﾟ∀ﾟﾍ)',
+    ]
+    temp = random.randrange(0,12,1)
+    return maimeng_list[temp]
 
 def try_faq(content, bot):
     response = bot.client.get('http://v3.faqrobot.org/servlet/AQ?s=p&sysNum=146129551966011507&sourceId=0&timestamp={0}&dataType=json'
@@ -78,7 +96,7 @@ def try_faq(content, bot):
     else:
         temp = random.randrange(0,300,1)
         if temp <= 1:
-            return '大家好，我是上科大GeekPie机器人，我的后台服务器会根据历史咨询问题主动回答大家的问题。为了不过分打扰大家的咨询，我在招生群内的能力都是被压制的，加我为好友私聊时，我提供更多信息问答服务。(ノ-^0^)ノ'
+            return '大家好，我是上科大GeekPie机器人，我的后台服务器会根据历史咨询问题主动回答大家的问题。为了不过分打扰大家的咨询，我在招生群内的能力都是被压制的，加我为好友私聊时，我提供更多信息问答服务。'
         return None
 
 def try_faq_p(content, bot):
@@ -114,7 +132,7 @@ def send_msg(msg, bot):
         t = try_faq(msg.content, bot)
         if t:
             t = filter_tags(t)
-            t += '\n----\n我是上科大GeekPie机器人。加好友私聊提供更多信息问答服务。'
+            t += '\n----\n{}我是上科大GeekPie机器人。加好友私聊提供更多信息问答服务。'.format(maimeng())
             while len(t) > 400:
                 bot.reply_msg(msg, t[:400])
                 t = t[400:]
@@ -124,7 +142,7 @@ def send_msg(msg, bot):
         t = try_faq(msg.content, bot)
         if t:
             t = filter_tags(t)
-            t += '\n----\n我是上科大GeekPie机器人。加好友私聊提供更多信息问答服务。'
+            t += '\n----\n{}我是上科大GeekPie机器人。加好友私聊提供更多信息问答服务。'.format(maimeng())
             while len(t) > 400:
                 bot.reply_msg(msg, t[:400])
                 t = t[400:]
@@ -141,5 +159,5 @@ def remove(msg, bot):
     t = try_faq_p(msg.content, bot)
     if t:
         t = filter_tags(t)
-        t += '\n----\n上科大GeekPie机器人。私聊我提供更多信息问答服务。'
+        t += '\n----\n{}我是上科大GeekPie机器人。加好友私聊提供更多信息问答服务。'.format(maimeng())
         bot.reply_msg(msg, t)
