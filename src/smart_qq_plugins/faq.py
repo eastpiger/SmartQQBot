@@ -138,7 +138,7 @@ def send_msg(msg, bot):
                 t = t[400:]
                 time.sleep(3)
             bot.reply_msg(msg, t)
-    if bot.gid_to_name(msg.from_uin) == '上科大本科招生咨询群':
+    if bot.gid_to_name(msg.from_uin) in ('上科大本招咨询①群', '上科大本招咨询②群'):
         t = try_faq(msg.content, bot)
         if t:
             t = filter_tags(t)
