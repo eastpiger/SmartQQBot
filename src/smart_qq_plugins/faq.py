@@ -11,7 +11,7 @@ import re
 from smart_qq_bot.signals import on_group_message, on_private_message
 
 pretime = [datetime.datetime(2000,1,1), datetime.datetime(2000,1,1)]
-delta = datetime.timedelta(minutes=30)
+delta = datetime.timedelta(hours=1)
 
 ##过滤HTML中的标签
 #将HTML中标签等信息去掉
