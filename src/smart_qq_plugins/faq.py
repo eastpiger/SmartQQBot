@@ -10,8 +10,9 @@ from random import randint
 import re
 from smart_qq_bot.signals import on_group_message, on_private_message
 
-pretime = [datetime.datetime(2000,1,1), datetime.datetime(2000,1,1)]
-delta = datetime.timedelta(hours=1)
+# pretime = [datetime.datetime(2000,1,1), datetime.datetime(2000,1,1)]
+# delta = datetime.timedelta(hours=1)
+count = [0,0]
 
 ##过滤HTML中的标签
 #将HTML中标签等信息去掉
@@ -175,10 +176,13 @@ def send_msg(msg, bot):
     #         bot.reply_msg(msg, t)
 
     if bot.gid_to_name(msg.from_uin) == '上科大本招咨询①群':
-        nowtime = datetime.datetime.now()
-        timedelta = nowtime - pretime[0]
-        if timedelta >= delta:
-            pretime[0] = nowtime
+        # nowtime = datetime.datetime.now()
+        # timedelta = nowtime - pretime[0]
+        # if timedelta >= delta:
+        count[0] = count[0] + 1
+        if count[0] >= 30:
+            # pretime[0] = nowtime
+            count[0] = 0
             t = ['''1.  上海考生须知：
 各位上海同学、家长：如果对综评有纠结的可以打电话到4009209393或者18930933479，报上考生的情况，了解是否有录取的可能。请报出完整信息，包括姓名、高考裸分和加分。这三个都要报的。我们会针对个人给出相应信息。分数线现在肯定出不来，因为还没到最后投档的时候，请各位知悉。电话的人会比较多，如果占线请稍候再试试，也请打电话简明扼要，不要影响其他人打进来，谢谢！''',
 '''2.  外省市考生须知：
@@ -198,8 +202,10 @@ def send_msg(msg, bot):
     if bot.gid_to_name(msg.from_uin) == '上科大本招咨询②群':
         nowtime = datetime.datetime.now()
         timedelta = nowtime - pretime[1]
-        if timedelta >= delta:
-            pretime[1] = nowtime
+        count[1] = count[1] + 1
+        if count[1] >= 30:
+            # pretime[0] = nowtime
+            count[1] = 0
             t = ['''1.  上海考生须知：
 各位上海同学、家长：如果对综评有纠结的可以打电话到4009209393或者18930933479，报上考生的情况，了解是否有录取的可能。请报出完整信息，包括姓名、高考裸分和加分。这三个都要报的。我们会针对个人给出相应信息。分数线现在肯定出不来，因为还没到最后投档的时候，请各位知悉。电话的人会比较多，如果占线请稍候再试试，也请打电话简明扼要，不要影响其他人打进来，谢谢！''',
 '''2.  外省市考生须知：
